@@ -1,24 +1,15 @@
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Cart</title>
-</head>
-<body>
-
-<h2>Your Cart</h2>
+<h2>Your Cart 🛒</h2>
 
 {% for item in cart %}
-<p>{{ item[1] }} - ₹{{ item[2] }}</p>
+<p>{{ item['name'] }} - ₹{{ item['price'] }}</p>
 {% endfor %}
 
 <h3>Total: ₹{{ total }}</h3>
 
-<form action="/checkout" method="POST">
-    <input type="radio" name="payment" value="COD"> COD<br>
-    <input type="radio" name="payment" value="QR"> QR Payment<br><br>
-    <button>Checkout</button>
-</form>
+<form method="POST" action="/checkout">
+    <input name="name" placeholder="Name" required><br><br>
+    <input name="phone" placeholder="Phone" required><br><br>
+    <textarea name="address" placeholder="Address" required></textarea><br><br>
 
-</body>
-</html>
+    <button type="submit">Place COD Order</button>
+</form>

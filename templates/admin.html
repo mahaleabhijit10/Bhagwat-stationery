@@ -1,0 +1,27 @@
+<h2>📦 Admin Orders</h2>
+
+<table border="1" cellpadding="10">
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Phone</th>
+    <th>Address</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for o in orders %}
+<tr>
+    <td>{{ o['id'] }}</td>
+    <td>{{ o['customer_name'] }}</td>
+    <td>{{ o['phone'] }}</td>
+    <td>{{ o['address'] }}</td>
+    <td>₹{{ o['total'] }}</td>
+    <td>{{ o['status'] }}</td>
+    <td>
+        <a href="/deliver/{{ o['id'] }}">Mark Delivered</a>
+    </td>
+</tr>
+{% endfor %}
+</table>

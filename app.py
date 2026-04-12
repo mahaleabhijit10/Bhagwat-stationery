@@ -5,87 +5,104 @@ app = Flask(__name__)
 app.secret_key = "secret123"
 
 def get_db():
-    return sqlite3.connect("store.db")
+    conn = sqlite3.connect("store.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
-# Home Page
+# ---------------- HOME ----------------
 @app.route('/')
 def home():
     db = get_db()
     products = db.execute("SELECT * FROM products").fetchall()
     return render_template('index.html', products=products)
 
-# Add to Cart
+# ---------------- ADD TO CART ----------------
 @app.route('/add/<int:id>')
 def add_to_cart(id):
     db = get_db()
-    db.execute("INSERT INTO cart (product_id) VALUES (?)", (id,))
+    db.execute("INSERT INTO cart (product_id, user_id) VALUES (?, ?)", (id, 1))
     db.commit()
     return redirect('/cart')
 
-# View Cart
+# ---------------- CART ----------------
 @app.route('/cart')
 def cart():
     db = get_db()
+
     items = db.execute("""
-        SELECT products.id, products.name, products.price 
-        FROM cart 
+        SELECT products.id, products.name, products.price
+        FROM cart
         JOIN products ON cart.product_id = products.id
     """).fetchall()
 
-    total = sum(item[2] for item in items)
+    total = sum(item['price'] for item in items)
     return render_template('cart.html', cart=items, total=total)
 
-# Checkout
+# ---------------- CHECKOUT (COD ONLY) ----------------
 @app.route('/checkout', methods=['POST'])
 def checkout():
-    payment = request.form['payment']
+    name = request.form['name']
+    phone = request.form['phone']
+    address = request.form['address']
 
     db = get_db()
+
+    items = db.execute("""
+        SELECT products.price
+        FROM cart
+        JOIN products ON cart.product_id = products.id
+    """).fetchall()
+
+    total = sum(i['price'] for i in items)
+
+    db.execute("""
+        INSERT INTO orders (customer_name, phone, address, total, status)
+        VALUES (?, ?, ?, ?, ?)
+    """, (name, phone, address, total, "Pending"))
+
     db.execute("DELETE FROM cart")
     db.commit()
 
-    if payment == 'COD':
-        return "✅ Order placed successfully (Cash on Delivery)"
-    else:
-        return render_template('checkout.html')
+    return "<h2>✅ Order Placed Successfully (COD)</h2>"
 
-# Signup
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+# ---------------- ADMIN PANEL ----------------
+@app.route('/admin')
+def admin():
+    db = get_db()
+    orders = db.execute("SELECT * FROM orders ORDER BY id DESC").fetchall()
+    return render_template('admin.html', orders=orders)
 
-        db = get_db()
-        db.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-        db.commit()
+# ---------------- MARK DELIVERED ----------------
+@app.route('/deliver/<int:id>')
+def deliver(id):
+    db = get_db()
+    db.execute("UPDATE orders SET status='Delivered' WHERE id=?", (id,))
+    db.commit()
+    return redirect('/admin')
 
-        return redirect('/login')
-
-    return render_template('signup.html')
-
-# Login
-@app.route('/login', methods=['GET', 'POST'])
+# ---------------- LOGIN ----------------
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        db = get_db()
-        user = db.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)).fetchone()
-
-        if user:
-            session['user'] = username
-            return redirect('/')
-        else:
-            return "❌ Invalid Login"
-
+        session['user'] = request.form['username']
+        return redirect('/')
     return render_template('login.html')
 
-# Logout
+# ---------------- SIGNUP ----------------
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    if request.method == 'POST':
+        db = get_db()
+        db.execute("INSERT INTO users (username, password) VALUES (?, ?)",
+                   (request.form['username'], request.form['password']))
+        db.commit()
+        return redirect('/login')
+    return render_template('signup.html')
+
+# ---------------- LOGOUT ----------------
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.clear()
     return redirect('/')
 
 if __name__ == '__main__':
