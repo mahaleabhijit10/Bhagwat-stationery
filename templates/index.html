@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bhagwat Stationery</title>
+
+    <style>
+        body { margin:0; font-family:Arial; background:#f5f5f5; }
+
+        .navbar {
+            background:#007bff;
+            padding:15px;
+            display:flex;
+            justify-content:space-between;
+            color:white;
+        }
+
+        .navbar a {
+            color:white;
+            margin:10px;
+            text-decoration:none;
+            font-weight:bold;
+        }
+
+        .container {
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+        }
+
+        .card {
+            background:white;
+            padding:20px;
+            margin:15px;
+            border-radius:10px;
+            width:200px;
+            text-align:center;
+        }
+
+        button {
+            background:#007bff;
+            color:white;
+            padding:10px;
+            border:none;
+            border-radius:5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div><b>Bhagwat Stationery</b></div>
+    <div>
+        <a href="/">Home</a>
+        <a href="/cart">Cart</a>
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<h2 style="text-align:center;">📚 Welcome to Bhagwat Stationery</h2>
+
+<div class="container">
+{% for product in products %}
+<div class="card">
+    <h3>{{ product[1] }}</h3>
+    <p>₹{{ product[2] }}</p>
+    <a href="/add/{{ product[0] }}">
+        <button>Add to Cart</button>
+    </a>
+</div>
+{% endfor %}
+</div>
+
+</body>
+</html>
