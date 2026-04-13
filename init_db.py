@@ -3,7 +3,7 @@ import sqlite3
 conn = sqlite3.connect('store.db')
 c = conn.cursor()
 
-# TABLES
+# PRODUCTS TABLE
 c.execute("""
 CREATE TABLE IF NOT EXISTS products (
     id INTEGER PRIMARY KEY,
@@ -13,14 +13,7 @@ CREATE TABLE IF NOT EXISTS products (
 )
 """)
 
-c.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY,
-    username TEXT,
-    password TEXT
-)
-""")
-
+# CART TABLE
 c.execute("""
 CREATE TABLE IF NOT EXISTS cart (
     id INTEGER PRIMARY KEY,
@@ -29,6 +22,7 @@ CREATE TABLE IF NOT EXISTS cart (
 )
 """)
 
+# ORDERS TABLE
 c.execute("""
 CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY,
@@ -40,7 +34,7 @@ CREATE TABLE IF NOT EXISTS orders (
 )
 """)
 
-# CLEAR OLD PRODUCTS
+# CLEAR OLD DATA
 c.execute("DELETE FROM products")
 
 # 10 PRODUCTS

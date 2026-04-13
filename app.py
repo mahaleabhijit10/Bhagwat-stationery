@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect
 import sqlite3
 
 app = Flask(__name__)
-app.secret_key = "secret123"
 
 def get_db():
     conn = sqlite3.connect("store.db")
@@ -30,12 +29,12 @@ def cart():
     db = get_db()
 
     items = db.execute("""
-        SELECT products.id, products.name, products.price
+        SELECT products.name, products.price
         FROM cart
         JOIN products ON cart.product_id = products.id
     """).fetchall()
 
-    total = sum(item['price'] for item in items)
+    total = sum(i['price'] for i in items)
     return render_template('cart.html', cart=items, total=total)
 
 # ---------------- CHECKOUT (COD ONLY) ----------------
@@ -79,31 +78,6 @@ def deliver(id):
     db.execute("UPDATE orders SET status='Delivered' WHERE id=?", (id,))
     db.commit()
     return redirect('/admin')
-
-# ---------------- LOGIN ----------------
-@app.route('/login', methods=['GET','POST'])
-def login():
-    if request.method == 'POST':
-        session['user'] = request.form['username']
-        return redirect('/')
-    return render_template('login.html')
-
-# ---------------- SIGNUP ----------------
-@app.route('/signup', methods=['GET','POST'])
-def signup():
-    if request.method == 'POST':
-        db = get_db()
-        db.execute("INSERT INTO users (username, password) VALUES (?, ?)",
-                   (request.form['username'], request.form['password']))
-        db.commit()
-        return redirect('/login')
-    return render_template('signup.html')
-
-# ---------------- LOGOUT ----------------
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect('/')
 
 if __name__ == '__main__':
     app.run(debug=True)
