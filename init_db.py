@@ -18,7 +18,7 @@ c.execute("""
 CREATE TABLE IF NOT EXISTS cart (
     id INTEGER PRIMARY KEY,
     product_id INTEGER,
-    user_id INTEGER
+    quantity INTEGER DEFAULT 1
 )
 """)
 

@@ -1,7 +1,12 @@
 <h2>🛒 Cart</h2>
 
 {% for item in cart %}
-<p>{{ item['name'] }} - ₹{{ item['price'] }}</p>
+<p>
+    {{ item['name'] }} -
+    ₹{{ item['price'] }} -
+    Qty: {{ item['quantity'] }}
+    <a href="/remove/{{ item['id'] }}">Remove</a>
+</p>
 {% endfor %}
 
 <h3>Total: ₹{{ total }}</h3>
@@ -10,6 +15,5 @@
     <input name="name" placeholder="Name" required><br><br>
     <input name="phone" placeholder="Phone" required><br><br>
     <textarea name="address" placeholder="Address" required></textarea><br><br>
-
-    <button type="submit">Place COD Order</button>
+    <button>Place Order</button>
 </form>

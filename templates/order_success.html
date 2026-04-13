@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Success</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f6f8;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            width: 400px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: green;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .success {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h2>🎉 Order Placed Successfully</h2>
+
+    <p class="success">Thank you <b>{{ name }}</b> 🙏</p>
+
+    <p>Your order has been received.</p>
+
+    <p><b>Total Amount:</b> ₹{{ total }}</p>
+
+    <hr>
+
+    <p>📲 Admin has been notified automatically</p>
+    <p>📧 Email sent successfully</p>
+    <p>📱 SMS alert sent successfully</p>
+
+    <a href="/">
+        <button>🏠 Back to Home</button>
+    </a>
+
+</div>
+
+</body>
+</html>

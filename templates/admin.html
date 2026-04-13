@@ -1,27 +1,141 @@
-<h2>📦 Admin Panel</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
 
-<table border="1" cellpadding="10">
-<tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Phone</th>
-    <th>Address</th>
-    <th>Total</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f4f6f8;
+            display: flex;
+        }
 
-{% for o in orders %}
-<tr>
-    <td>{{ o['id'] }}</td>
-    <td>{{ o['customer_name'] }}</td>
-    <td>{{ o['phone'] }}</td>
-    <td>{{ o['address'] }}</td>
-    <td>₹{{ o['total'] }}</td>
-    <td>{{ o['status'] }}</td>
-    <td>
-        <a href="/deliver/{{ o['id'] }}">Mark Delivered</a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: #111827;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 6px;
+        }
+
+        .sidebar a:hover {
+            background: #2563eb;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .info {
+            margin: 5px 0;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+
+        .pending {
+            background: orange;
+            color: white;
+        }
+
+        .delivered {
+            background: green;
+            color: white;
+        }
+
+        /* BUTTON */
+        .btn {
+            padding: 8px 12px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .btn:hover {
+            background: #1e40af;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>🛒 Admin Panel</h2>
+    <a href="/admin">📦 Orders</a>
+    <a href="/">🏪 Store</a>
+    <a href="/cart">🛍️ Cart</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <div class="header">📊 Orders Dashboard</div>
+
+    {% for o in orders %}
+    <div class="card">
+
+        <div class="info"><b>👤 Name:</b> {{ o['customer_name'] }}</div>
+        <div class="info"><b>📞 Phone:</b> {{ o['phone'] }}</div>
+        <div class="info"><b>🏠 Address:</b> {{ o['address'] }}</div>
+        <div class="info"><b>💰 Total:</b> ₹{{ o['total'] }}</div>
+
+        {% if o['status'] == 'Pending' %}
+            <span class="status pending">Pending</span>
+        {% else %}
+            <span class="status delivered">Delivered</span>
+        {% endif %}
+
+        <br><br>
+
+        <a class="btn" href="/deliver/{{ o['id'] }}">
+            Mark Delivered
+        </a>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
